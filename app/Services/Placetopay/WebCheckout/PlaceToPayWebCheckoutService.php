@@ -31,7 +31,7 @@ class PlaceToPayWebCheckoutService
      * @return mixed
      * @throws GuzzleException
      */
-    public function createRequest($data)
+    public function createRequest($data): object
     {
         $client = $this->createClient(null);
 
@@ -65,7 +65,7 @@ class PlaceToPayWebCheckoutService
      * @return mixed
      * @throws GuzzleException
      */
-    public function getRequestInformation($id)
+    public function getRequestInformation($id): object
     {
         $client = $this->createClient(null);
 

@@ -6,6 +6,8 @@ use App\Models\Order;
 use App\Models\PaymentAttempt;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentAttemptRepository;
+use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
+use App\Repositories\RepositoryInterface\PaymentAttemptRepositoryInterface;
 use App\Services\Payment\PaymentService;
 use App\Services\Placetopay\WebCheckout\PlaceToPayWebCheckoutService;
 use GuzzleHttp\Exception\ClientException;
@@ -23,9 +25,10 @@ use PDOException;
 
 class PaymentController extends Controller
 {
+    /** @var PaymentAttemptRepositoryInterface  */
     private $paymentAttemptRepository;
 
-    /** @var OrderRepository */
+    /** @var OrderRepositoryInterface */
     private $orderRepository;
 
     /** @var PaymentService */
@@ -36,14 +39,14 @@ class PaymentController extends Controller
 
     /**
      * PaymentController constructor.
-     * @param PaymentAttemptRepository $paymentAttemptRepository
-     * @param OrderRepository $orderRepository
+     * @param PaymentAttemptRepositoryInterface $paymentAttemptRepository
+     * @param OrderRepositoryInterface $orderRepository
      * @param PaymentService $paymentService
      * @param PlaceToPayWebCheckoutService $placeToPayWebCheckoutService
      */
     public function __construct(
-        PaymentAttemptRepository $paymentAttemptRepository,
-        OrderRepository $orderRepository,
+        PaymentAttemptRepositoryInterface $paymentAttemptRepository,
+        OrderRepositoryInterface $orderRepository,
         PaymentService $paymentService,
         PlaceToPayWebCheckoutService $placeToPayWebCheckoutService
     )
@@ -57,7 +60,7 @@ class PaymentController extends Controller
     /**
      * @return Application|Factory|View
      */
-    public function show()
+    public function show(): View
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByUserId(Auth::user()->id);

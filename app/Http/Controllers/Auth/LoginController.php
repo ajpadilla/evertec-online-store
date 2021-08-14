@@ -4,17 +4,29 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
 {
-    public function show()
+    /**
+     * @return Application|Factory|View
+     */
+    public function show(): View
     {
         return view('auth.login');
     }
 
-    public function store(LoginUserRequest $request)
+    /**
+     * @param LoginUserRequest $request
+     * @return RedirectResponse
+     */
+    public function store(LoginUserRequest $request): RedirectResponse
     {
         $credentials = $request->only('email', 'password');
 
@@ -29,7 +41,11 @@ class LoginController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    /**
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
+     */
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 
