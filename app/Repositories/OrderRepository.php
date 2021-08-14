@@ -69,7 +69,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         return $this->search(['user_id' => $user_id])->get()->first();
     }
 
-    public function associateProduct(Order $order, Product $product)
+    public function associateProduct(Order $order, Product $product): bool
     {
         $order->amount = $product->price;
         $order->product()->associate($product);
