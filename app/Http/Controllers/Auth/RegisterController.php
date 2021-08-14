@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use App\services\User\UserService;
+use App\Services\User\UserService;
 use Exception;
+use Illuminate\Database\QueryException;
+use PDOException;
 use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
@@ -42,10 +44,12 @@ class RegisterController extends Controller
             $this->userService->registerNewUser($request->all());
 
             DB::commit();
-        } catch (Exception $exception) {
+        } catch (QueryException | PDOException $e) {
             DB::rollBack();
+            logger($e->getMessage());
+            logger($e->getTraceAsString());
 
-            return redirect()->back()->withErrors($exception->getMessage());
+            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return redirect()->back()->with('alert_success', 'User Register Successful. You can now login');
