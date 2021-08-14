@@ -6,9 +6,10 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
 use Illuminate\Support\Collection;
 
-class OrderRepository extends AbstractRepository
+class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
     /**
      * OrderRepository constructor.
@@ -26,7 +27,7 @@ class OrderRepository extends AbstractRepository
      * @param $second
      * @param string $join_type
      */
-    private function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));
