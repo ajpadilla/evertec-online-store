@@ -62,6 +62,7 @@ class BuyProductRequest extends FormRequest
         return $validator;
     }
 
+
     protected function failedValidation(Validator $validator)
     {
         logger('Validation errors on'. get_class($this));
@@ -70,5 +71,21 @@ class BuyProductRequest extends FormRequest
         $jsonResponse = response()->json(['errors' => $validator->errors()], 422);
 
         throw new HttpResponseException($jsonResponse);
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return Product
+     */
+    public function getProduct(): Product
+    {
+        return $this->product;
     }
 }
