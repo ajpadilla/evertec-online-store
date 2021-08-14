@@ -91,6 +91,18 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'testing_db' => [
+            'driver' => 'mysql',
+            'host' => env('TEST_DB_HOST', '127.0.0.1'),
+            'database' => env('TEST_DB_DATABASE', 'laravel_testing'),
+            'username' => env('TEST_DB_USERNAME', 'root'),
+            'password' => env('TEST_DB_PASSWORD', 'Heme19234099'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+        ],
+
     ],
 
     /*
