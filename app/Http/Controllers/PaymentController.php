@@ -6,45 +6,61 @@ use App\Models\Order;
 use App\Models\PaymentAttempt;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentAttemptRepository;
-use Exception;
+use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
+use App\Repositories\RepositoryInterface\PaymentAttemptRepositoryInterface;
+use App\Services\Payment\PaymentService;
+use App\Services\Placetopay\WebCheckout\PlaceToPayWebCheckoutService;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
+use PDOException;
 
 class PaymentController extends Controller
 {
+    /** @var PaymentAttemptRepositoryInterface  */
     private $paymentAttemptRepository;
 
-    /** @var OrderRepository */
+    /** @var OrderRepositoryInterface */
     private $orderRepository;
 
     /** @var PaymentService */
     private $paymentService;
 
-    /** @var PlacetopayWebCheckoutService */
-    private $placetopayWebCheckoutService;
+    /** @var PlaceToPayWebCheckoutService */
+    private $placeToPayWebCheckoutService;
 
     /**
      * PaymentController constructor.
-     * @param PaymentAttemptRepository $paymentAttemptRepository
-     * @param OrderRepository $orderRepository
+     * @param PaymentAttemptRepositoryInterface $paymentAttemptRepository
+     * @param OrderRepositoryInterface $orderRepository
      * @param PaymentService $paymentService
-     * @param PlacetopayWebCheckoutService $placetopayWebCheckoutService
+     * @param PlaceToPayWebCheckoutService $placeToPayWebCheckoutService
      */
     public function __construct(
-        PaymentAttemptRepository $paymentAttemptRepository,
-        OrderRepository $orderRepository,
+        PaymentAttemptRepositoryInterface $paymentAttemptRepository,
+        OrderRepositoryInterface $orderRepository,
         PaymentService $paymentService,
-        PlacetopayWebCheckoutService $placetopayWebCheckoutService
+        PlaceToPayWebCheckoutService $placeToPayWebCheckoutService
     )
     {
         $this->paymentAttemptRepository = $paymentAttemptRepository;
         $this->orderRepository = $orderRepository;
         $this->paymentService = $paymentService;
-        $this->placetopayWebCheckoutService = $placetopayWebCheckoutService;
+        $this->placeToPayWebCheckoutService = $placeToPayWebCheckoutService;
     }
 
-    public function show()
+    /**
+     * @return Application|Factory|View
+     */
+    public function show(): View
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByUserId(Auth::user()->id);
@@ -52,7 +68,11 @@ class PaymentController extends Controller
         return view('layouts.orders.pay', compact('order'));
     }
 
-    public function process(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function process(Request $request): RedirectResponse
     {
 
         try {
@@ -65,8 +85,8 @@ class PaymentController extends Controller
 
             $data = $this->paymentService->generateRequestData($order);
 
-            $responseCreateRequest = $this->placetopayWebCheckoutService->createRequest($data);
-            $responseGetRequestInformation = $this->placetopayWebCheckoutService->getRequestInformation($responseCreateRequest->requestId);
+            $responseCreateRequest = $this->placeToPayWebCheckoutService->createRequest($data);
+            $responseGetRequestInformation = $this->placeToPayWebCheckoutService->getRequestInformation($responseCreateRequest->requestId);
 
             $this->paymentAttemptRepository->update($paymentAttempt,[
                 'external_id' => $responseCreateRequest->requestId,
@@ -78,17 +98,20 @@ class PaymentController extends Controller
 
             return redirect()->to($responseCreateRequest->processUrl);
 
-        } catch (Exception $exception) {
+        } catch (QueryException | PDOException | ClientException | GuzzleException | ConnectException  $exception) {
             DB::rollBack();
+            logger($exception->getMessage());
+            logger($exception->getTraceAsString());
 
-            return redirect()->route('pay_order')->withErrors(["order_error"=>"{$exception->getMessage()}"]);
-        } catch (GuzzleException $exception) {
             return redirect()->route('pay_order')->withErrors(["order_error"=>"{$exception->getMessage()}"]);
         }
-
     }
 
-    public function updateOrderState(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateOrderState(Request $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -99,7 +122,7 @@ class PaymentController extends Controller
             /** @var PaymentAttempt $paymentAttemp */
             $paymentAttempt = $order->getFirstPaymentAttempt();
 
-            $responseGetRequestInformation = $this->placetopayWebCheckoutService->getRequestInformation($paymentAttempt->external_id);
+            $responseGetRequestInformation = $this->placeToPayWebCheckoutService->getRequestInformation($paymentAttempt->external_id);
 
             $this->paymentAttemptRepository->update($paymentAttempt,[
                 'external_id' => $responseGetRequestInformation->requestId,
@@ -121,13 +144,11 @@ class PaymentController extends Controller
 
             return redirect()->route('pay_order');
 
-        } catch (Exception $exception) {
+        } catch (ClientException | GuzzleException | ConnectException $exception) {
             DB::rollBack();
+            logger($exception->getMessage());
+            logger($exception->getTraceAsString());
 
-            return redirect()->route('pay_order')->withErrors(["order_error"=>"{$exception->getMessage()}"]);
-
-
-        } catch (GuzzleException $exception) {
             return redirect()->route('pay_order')->withErrors(["order_error"=>"{$exception->getMessage()}"]);
         }
     }

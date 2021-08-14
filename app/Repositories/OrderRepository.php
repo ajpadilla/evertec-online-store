@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\Product;
 use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
@@ -64,12 +65,21 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         return $query->orderBy('orders.id');
     }
 
-    public function getByUserId($user_id)
+    /**
+     * @param $user_id
+     * @return mixed
+     */
+    public function getByUserId($user_id): Model
     {
         return $this->search(['user_id' => $user_id])->get()->first();
     }
 
-    public function associateProduct(Order $order, Product $product)
+    /**
+     * @param Order $order
+     * @param Product $product
+     * @return bool
+     */
+    public function associateProduct(Order $order, Product $product): bool
     {
         $order->amount = $product->price;
         $order->product()->associate($product);

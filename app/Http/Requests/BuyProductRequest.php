@@ -53,7 +53,7 @@ class BuyProductRequest extends FormRequest
             });
         }
 
-        if (!$this->product = $productRepository->find($this->route('product'))){
+        if (!$this->product = $productRepository->find($this->route('id'))){
             $validator->after( function (Validator $validator) {
                 $validator->errors()->add('product', 'Producto not found.');
             });
@@ -61,6 +61,7 @@ class BuyProductRequest extends FormRequest
 
         return $validator;
     }
+
 
     protected function failedValidation(Validator $validator)
     {
@@ -70,5 +71,21 @@ class BuyProductRequest extends FormRequest
         $jsonResponse = response()->json(['errors' => $validator->errors()], 422);
 
         throw new HttpResponseException($jsonResponse);
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return Product
+     */
+    public function getProduct(): Product
+    {
+        return $this->product;
     }
 }

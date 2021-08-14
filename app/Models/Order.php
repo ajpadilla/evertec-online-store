@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -29,52 +31,83 @@ class Order extends Model
         'updated_at'
     ];
 
-    public function product()
+    /**
+     * @return BelongsTo
+     */
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function paymentAttempts()
+    /**
+     * @return HasMany
+     */
+    public function paymentAttempts(): HasMany
     {
         return $this->hasMany(PaymentAttempt::class);
     }
 
-    public function getFirstPaymentAttempt()
+    /**
+     * @return Model|null
+     */
+    public function getFirstPaymentAttempt(): ?Model
     {
         return $this->paymentAttempts()->count() ? $this->paymentAttempts()->first() : null;
     }
 
-    public function getFirstPaymentAttemptState()
+    /**
+     * @return string|null
+     */
+    public function getFirstPaymentAttemptState(): ?string
     {
         return $this->paymentAttempts()->count() ? $this->paymentAttempts()->first()->state : null;
     }
 
-    public function getFirstPaymentAttemptUrlProcess()
+    /**
+     * @return string|null
+     */
+    public function getFirstPaymentAttemptUrlProcess(): ?string
     {
         return $this->paymentAttempts()->count() ? $this->paymentAttempts()->first()->url_process : null;
     }
 
-    public function getProductName()
+    /**
+     * @return string|null
+     */
+    public function getProductName(): ?string
     {
         return $this->product ?  $this->product->name : null;
     }
 
-    public function getProductPrice()
+    /**
+     * @return float|null
+     */
+    public function getProductPrice(): ?float
     {
         return $this->product ?  $this->product->price : null;
     }
 
-    public function getTotalProducts()
+    /**
+     * @return int
+     */
+    public function getTotalProducts(): int
     {
         return $this->product()->count();
     }
 
-    public function hasProducts(){
+    /**
+     * @return bool
+     */
+    public function hasProducts(): bool
+    {
         return $this->getTotalProducts() > 0;
     }
 

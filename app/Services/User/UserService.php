@@ -23,6 +23,12 @@ class UserService
     /** @var PaymentAttemptRepositoryInterface */
     private $paymentAttemptRepository;
 
+    /**
+     * UserService constructor.
+     * @param UserRepositoryInterface $userRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param PaymentAttemptRepositoryInterface $paymentAttemptRepository
+     */
     public function __construct(
         UserRepositoryInterface $userRepository,
         OrderRepositoryInterface $orderRepository,
@@ -35,7 +41,7 @@ class UserService
     /**
      * @param array $inputs
      */
-    public function registerNewUser(array $inputs){
+    public function registerNewUser(array $inputs): void{
         $full_name = $inputs['first_name'].' '.$inputs['last_name'];
 
         /** @var User $user */

@@ -21,6 +21,11 @@ class ProductService
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
+    /**
+     * ProductService constructor.
+     * @param ProductRepositoryInterface $productRepository
+     * @param OrderRepositoryInterface $orderRepository
+     */
     public function __construct(ProductRepositoryInterface $productRepository, OrderRepositoryInterface $orderRepository)
     {
         $this->productRepository = $productRepository;

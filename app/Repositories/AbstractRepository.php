@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class AbstractRepository
     /**
      * @return Collection|static[]
      */
-    function all()
+    function all(): Collection
     {
         return $this->model->all();
     }
@@ -28,17 +29,25 @@ class AbstractRepository
      *
      * @return Model
      */
-    function getById($id)
+    function getById($id): Model
     {
         return $this->model->findOrFail($id);
     }
 
-    function find($id, $columns = array('*'))
+    /**
+     * @param $id
+     * @param string[] $columns
+     * @return Model
+     */
+    function find($id, $columns = array('*')): Model
     {
         return $this->model->find($id, $columns);
     }
 
-    function first()
+    /**
+     * @return Model
+     */
+    function first(): Model
     {
         return $this->model->first();
     }
@@ -48,15 +57,15 @@ class AbstractRepository
      *
      * @return Model
      */
-    function create(array $input)
+    function create(array $input): Model
     {
         return $this->model->create($input);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function deleteAll()
+    public function deleteAll(): ?bool
     {
         $this->model->delete();
     }
@@ -66,12 +75,12 @@ class AbstractRepository
      *
      * @return bool
      */
-    public function save(Model $model)
+    public function save(Model $model): bool
     {
         return $model->save();
     }
 
-    public function update(Model $model, array $attributes)
+    public function update(Model $model, array $attributes): bool
     {
         return $model->update($attributes);
     }
@@ -82,9 +91,9 @@ class AbstractRepository
      * @param Model $model
      *
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
-    public function delete(Model $model)
+    public function delete(Model $model): ?bool
     {
         return $model->delete();
     }
