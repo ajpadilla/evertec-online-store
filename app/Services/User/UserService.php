@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\services\User;
+namespace App\Services\User;
 
 
 use App\Models\Order;
@@ -32,6 +32,9 @@ class UserService
         $this->paymentAttemptRepository = $paymentAttemptRepository;
     }
 
+    /**
+     * @param array $inputs
+     */
     public function registerNewUser(array $inputs){
         $full_name = $inputs['first_name'].' '.$inputs['last_name'];
 
