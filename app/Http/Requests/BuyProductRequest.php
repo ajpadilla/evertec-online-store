@@ -53,7 +53,7 @@ class BuyProductRequest extends FormRequest
             });
         }
 
-        if (!$this->product = $productRepository->find($this->route('product'))){
+        if (!$this->product = $productRepository->find($this->route('id'))){
             $validator->after( function (Validator $validator) {
                 $validator->errors()->add('product', 'Producto not found.');
             });
