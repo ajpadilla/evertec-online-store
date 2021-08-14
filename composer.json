@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.5",
         "spatie/laravel-permission": "^4.0",
         "ext-json": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
