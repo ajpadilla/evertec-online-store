@@ -5,9 +5,10 @@ namespace App\Repositories;
 
 
 use App\Models\Product;
+use App\Repositories\RepositoryInterface\ProductRepositoryInterface;
 use Illuminate\Support\Collection;
 
-class ProductRepository extends  AbstractRepository
+class ProductRepository extends  AbstractRepository implements ProductRepositoryInterface
 {
     /**
      * ProductRepository constructor.
@@ -25,7 +26,7 @@ class ProductRepository extends  AbstractRepository
      * @param $second
      * @param string $join_type
      */
-    private function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));

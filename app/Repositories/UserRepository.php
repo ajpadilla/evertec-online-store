@@ -4,9 +4,10 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 
-class UserRepository extends AbstractRepository
+class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
 
     /**
@@ -25,7 +26,7 @@ class UserRepository extends AbstractRepository
      * @param $second
      * @param string $join_type
      */
-    private function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));

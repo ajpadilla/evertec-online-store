@@ -24,14 +24,6 @@ class AbstractRepository
     }
 
     /**
-     * @return Model
-     */
-    function newInstance()
-    {
-        return $this->model->newInstance();
-    }
-
-    /**
      * @param $id
      *
      * @return Model
@@ -46,35 +38,9 @@ class AbstractRepository
         return $this->model->find($id, $columns);
     }
 
-    public function findMany(array $ids)
-    {
-        return $this->model->findMany($ids);
-    }
-
     function first()
     {
         return $this->model->first();
-    }
-
-    /**
-     * @param array $attributes
-     * @param array $values
-     *
-     * @return Model
-     */
-    function firstOrCreate(array $attributes = [], array $values = [])
-    {
-        return $this->model->firstOrCreate($attributes, $values);
-    }
-
-    /**
-     * @param array $attributes
-     *
-     * @return Model
-     */
-    function updateOrCreate(array $search = [], array $attributes = [])
-    {
-        return $this->model->updateOrCreate($search, $attributes);
     }
 
     /**
@@ -85,20 +51,6 @@ class AbstractRepository
     function create(array $input)
     {
         return $this->model->create($input);
-    }
-
-    /**
-     * @param array $input
-     *
-     * @return static
-     */
-    function forceCreate(array $input)
-    {
-        $this->model->unguard();
-        $instance = $this->model->create($input);
-        $this->model->reguard();
-
-        return $instance;
     }
 
     /**
@@ -135,24 +87,5 @@ class AbstractRepository
     public function delete(Model $model)
     {
         return $model->delete();
-    }
-
-    /**
-     * Force a hard delete on a soft deleted model.
-     *
-     * This method protects developers from running forceDelete when trait is missing.
-     *
-     * @return bool|null
-     */
-    public function forceDelete(Model $model)
-    {
-        return $model->forceDelete();
-    }
-
-    public function truncate()
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->model->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1 ;');
     }
 }
