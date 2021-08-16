@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Repositories\RepositoryInterface\ProductRepositoryInterface;
 use Faker\Generator;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Seeder;
 class ProductsSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class ProductsSeeder extends Seeder
 
     /**
      * ProductsSeeder constructor.
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function __construct()
     {
@@ -34,16 +35,16 @@ class ProductsSeeder extends Seeder
         {
             $productRepository->create([
                 'name' => $this->faker->text($maxNbChars = 10),
-                'price' =>  $this->faker->numberBetween($min = 1500, $max = 6000)
+                'price' =>  $this->faker->numberBetween($min = 10000, $max = 20000)
             ]);
         }
     }
 
     /**
      * @return object
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
-    protected function withFaker()
+    protected function withFaker(): object
     {
         return Container::getInstance()->make(Generator::class);
     }
