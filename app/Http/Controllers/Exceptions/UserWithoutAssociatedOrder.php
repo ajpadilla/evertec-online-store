@@ -13,7 +13,7 @@ class OrderAssociatedWithoutUserException extends Exception
      */
     public function __construct(User $user)
     {
-        $message = "There is no order associated with the user {$user->name}";
+        $message = "{$user->name} does not have an associated order ";
         parent::__construct($message);
     }
 }
