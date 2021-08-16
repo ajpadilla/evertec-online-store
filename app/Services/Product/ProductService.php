@@ -5,7 +5,7 @@ namespace App\Services\Product;
 
 
 use App\Http\Controllers\Exceptions\OrderAlreadyAssociatedProductException;
-use App\Http\Controllers\Exceptions\OrderAssociatedWithoutUserException;
+use App\Http\Controllers\Exceptions\UserWithoutAssociatedOrder;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -37,13 +37,13 @@ class ProductService
      * @param Product $product
      * @return Order
      * @throws OrderAlreadyAssociatedProductException
-     * @throws OrderAssociatedWithoutUserException
+     * @throws UserWithoutAssociatedOrder
      */
     public function addProductToOrder(User $user, Product $product): Order
     {
         /** @var Order $order */
         if(!$order = $this->orderRepository->getByUserId($user->id)){
-            throw new OrderAssociatedWithoutUserException($user);
+            throw new UserWithoutAssociatedOrder($user);
         }
 
         if ($order->getTotalProducts() > 0){
