@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
 use App\Repositories\RepositoryInterface\PaymentAttemptRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -82,9 +83,9 @@ class PermissionsSeeder extends Seeder
 
     /**
      * @return object
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
-    protected function withFaker()
+    protected function withFaker(): object
     {
         return Container::getInstance()->make(Generator::class);
     }
