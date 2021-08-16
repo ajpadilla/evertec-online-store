@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Exceptions;
 use App\Models\User;
 use Exception;
 
-class OrderAssociatedWithoutUserException extends Exception
+class UserWithoutAssociatedOrder extends Exception
 {
     /**
      * OrderAssociatedWithoutUserException constructor.
