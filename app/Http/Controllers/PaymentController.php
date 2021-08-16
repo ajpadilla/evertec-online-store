@@ -144,7 +144,7 @@ class PaymentController extends Controller
 
             return redirect()->route('pay_order');
 
-        } catch (ClientException | GuzzleException | ConnectException $exception) {
+        } catch (QueryException | PDOException | ClientException | GuzzleException | ConnectException $exception) {
             DB::rollBack();
             logger($exception->getMessage());
             logger($exception->getTraceAsString());
