@@ -15,7 +15,7 @@ class OrderAlreadyAssociatedProductException extends Exception
      */
     public function __construct(Order $order)
     {
-        $message = "The order number {$order->id} already has an associated product";
+        $message = "The order number #{$order->id} already has an associated product";
         parent::__construct($message);
     }
 }
