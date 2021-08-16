@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\OrderRepository;
+use App\Repositories\RepositoryInterface\OrderRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,14 +10,17 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    /** @var OrderRepository */
+    /** @var int  */
+    const PAGINATION = 5;
+
+    /** @var OrderRepositoryInterface */
     private $orderRepository;
 
     /**
      * OrderController constructor.
-     * @param OrderRepository $orderRepository
+     * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(OrderRepositoryInterface $orderRepository)
     {
         $this->orderRepository = $orderRepository;
     }
@@ -28,7 +31,7 @@ class OrderController extends Controller
      */
     public function index(Request $request): View
     {
-        $orders = $this->orderRepository->search([])->paginate(5);
+        $orders = $this->orderRepository->search([])->paginate(self::PAGINATION);
 
         return view('layouts.orders.index', compact('orders'));
     }
