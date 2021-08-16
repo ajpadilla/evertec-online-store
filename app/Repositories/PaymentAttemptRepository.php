@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\PaymentAttempt;
 use App\Repositories\RepositoryInterface\PaymentAttemptRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class PaymentAttemptRepository extends AbstractRepository implements PaymentAttemptRepositoryInterface
@@ -26,7 +27,7 @@ class PaymentAttemptRepository extends AbstractRepository implements PaymentAtte
      * @param $second
      * @param string $join_type
      */
-    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner'): void
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));
@@ -38,7 +39,7 @@ class PaymentAttemptRepository extends AbstractRepository implements PaymentAtte
      * @param bool $count
      * @return mixed
      */
-    public function search(array $filters = [], $count = false)
+    public function search(array $filters = [], $count = false): Builder
     {
         $query = $this->model
             ->distinct()

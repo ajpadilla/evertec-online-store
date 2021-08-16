@@ -6,6 +6,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
@@ -26,7 +27,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      * @param $second
      * @param string $join_type
      */
-    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner'): void
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));
@@ -38,7 +39,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      * @param bool $count
      * @return mixed
      */
-    public function search(array $filters = [], $count = false)
+    public function search(array $filters = [], $count = false): Builder
     {
         $query = $this->model
             ->distinct()

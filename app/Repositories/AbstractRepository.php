@@ -29,7 +29,7 @@ class AbstractRepository
      *
      * @return Model
      */
-    function getById($id): Model
+    function getById($id): ?Model
     {
         return $this->model->findOrFail($id);
     }
@@ -39,7 +39,7 @@ class AbstractRepository
      * @param string[] $columns
      * @return Model
      */
-    function find($id, $columns = array('*')): Model
+    function find($id, $columns = array('*')): ?Model
     {
         return $this->model->find($id, $columns);
     }

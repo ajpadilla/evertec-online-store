@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Models\Product;
 use App\Repositories\RepositoryInterface\ProductRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductRepository extends  AbstractRepository implements ProductRepositoryInterface
 {
@@ -26,7 +27,7 @@ class ProductRepository extends  AbstractRepository implements ProductRepository
      * @param $second
      * @param string $join_type
      */
-    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner')
+    public function addJoin(Collection &$joins, $table, $first, $second, $join_type = 'inner'): void
     {
         if (!$joins->has($table)) {
             $joins->put($table, json_encode(compact('first', 'second', 'join_type')));
@@ -38,8 +39,9 @@ class ProductRepository extends  AbstractRepository implements ProductRepository
      * @param bool $count
      * @return mixed
      */
-    public function search(array $filters = [], $count = false)
+    public function search(array $filters = [], $count = false): Builder
     {
+        /** @var Builder $query */
         $query = $this->model
             ->distinct()
             ->select('products.*');
