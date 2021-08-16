@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Exceptions\OrderAlreadyAssociatedProductException;
-use App\Http\Controllers\Exceptions\OrderAssociatedWithoutUserException;
+use App\Http\Controllers\Exceptions\UserWithoutAssociatedOrder;
 use App\Http\Requests\BuyProductRequest;
 use App\Repositories\RepositoryInterface\ProductRepositoryInterface;
 use App\Services\Product\ProductService;
@@ -48,7 +48,7 @@ class ProductController extends Controller
 
             return redirect()->route('customer_order');
 
-        } catch (ModelNotFoundException | QueryException | PDOException | OrderAssociatedWithoutUserException | OrderAlreadyAssociatedProductException $exception) {
+        } catch (ModelNotFoundException | QueryException | PDOException | UserWithoutAssociatedOrder | OrderAlreadyAssociatedProductException $exception) {
             DB::rollBack();
             logger($exception->getMessage());
             logger($exception->getTraceAsString());
