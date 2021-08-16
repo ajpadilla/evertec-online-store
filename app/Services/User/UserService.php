@@ -41,7 +41,8 @@ class UserService
     /**
      * @param array $inputs
      */
-    public function registerNewUser(array $inputs): void{
+    public function registerNewUser(array $inputs): void
+    {
         $full_name = $inputs['first_name'].' '.$inputs['last_name'];
 
         /** @var User $user */
