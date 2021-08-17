@@ -22,7 +22,7 @@ class PlaceToPayWebCheckoutService
      */
     public function __construct()
     {
-        $this->endpoint = env('TEST_PLACE_TO_PAY_URL');
+        $this->endpoint = env('TEST_PLACE_TO_PAY_URL', 'https://dev.placetopay.com/redirection');
     }
 
     /**
@@ -40,12 +40,12 @@ class PlaceToPayWebCheckoutService
 
         $seed = $this->createSeed();
 
-        $secretKey = env('TEST_PLACE_TO_PAY_SECRET_KEY');
+        $secretKey = env('TEST_PLACE_TO_PAY_SECRET_KEY', '024h1IlD');
 
         $tranKey = $this->createTranKey($nonce, $seed, $secretKey);
 
         $resultData = array_merge($data, ["auth" => [
-            "login" => env('TEST_PLACE_TO_PAY_LOGIN'),
+            "login" => env('TEST_PLACE_TO_PAY_LOGIN', '6dd490faf9cb87a9862245da41170ff2'),
             "tranKey" => "{$tranKey}",
             "nonce" => "{$nonce_base64}",
             "seed" => "{$seed}"
