@@ -17,7 +17,7 @@ class PaymentService
     {
 
         $reference = 'TEST_' . time();
-        $expiration_date = Carbon::now()->addDays(1)->format('c');
+        $expirationDate = Carbon::now()->addDays(1)->format('c');
 
         return [
             "buyer" => [
@@ -36,7 +36,7 @@ class PaymentService
                     "total" => $order->amount
                 ]
             ],
-            "expiration" => "{$expiration_date}",
+            "expiration" => "{$expirationDate}",
             "ipAddress" => env('WEB_CHECKOUT_IP_ADDRESS'),
             "returnUrl" => env('WEB_CHECKOUT_RETURN_SITE'),
             "userAgent" => env('WEB_CHECKOUT_USER_AGENT'),
