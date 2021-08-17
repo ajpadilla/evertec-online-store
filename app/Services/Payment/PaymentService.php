@@ -37,9 +37,9 @@ class PaymentService
                 ]
             ],
             "expiration" => "{$expiration_date}",
-            "ipAddress" => '27.0.0.1',
-            "returnUrl" => "http://everteconlinestore.dev.com/update/order/state",
-            "userAgent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36",
+            "ipAddress" => env('WEB_CHECKOUT_IP_ADDRESS'),
+            "returnUrl" => env('WEB_CHECKOUT_RETURN_SITE'),
+            "userAgent" => env('WEB_CHECKOUT_USER_AGENT'),
             "paymentMethod" => null
         ];
     }
